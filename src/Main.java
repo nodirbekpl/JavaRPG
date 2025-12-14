@@ -74,6 +74,7 @@ public class Main {
             }
             if (playerActed){
                 turn++;
+                player.tickCooldown();
                 if (turn % 3 == 0){
                     System.out.println("---- Turn " + turn + " ----");
                 }
