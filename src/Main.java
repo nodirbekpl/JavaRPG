@@ -53,7 +53,7 @@ public class Main {
                     int dmg = random.nextInt(10) + 1;
                     currentEnemy.takeDamage(dmg);
 
-                    System.out.println("You hit " + currentEnemy.name + " for " + dmg);
+                    System.out.println("You hit " + currentEnemy.getName() + " for " + dmg);
 
                     playerActed = true;
                 }
@@ -92,7 +92,7 @@ public class Main {
                 // Information
                 case "status" -> {
                     System.out.println("Player HP: " + player.health);
-                    System.out.println("Enemy HP: " + currentEnemy.health);
+                    System.out.println(currentEnemy.getName() + " HP: " + currentEnemy.getHealth());
                     System.out.println("Power cooldown: " + player.powerCooldown);
                     System.out.println("Enemy stunned: " + currentEnemy.isStunned());
                 }
@@ -117,7 +117,7 @@ public class Main {
                     if (roll < 70) {
                         int enemyDmg = random.nextInt(8) + 1 + (turn / 5);
                         player.takeDamage(enemyDmg);
-                        System.out.println(currentEnemy.name + " hits you for " + enemyDmg);
+                        System.out.println(currentEnemy.getName() + " hits you for " + enemyDmg);
                     } else {
                         System.out.println("Enemy hesitates...");
                     }

@@ -1,30 +1,38 @@
 public class Enemy {
-    String name;
-    int health;
-    boolean stunned = false;
+    private String name;
+    private int health;
+    private boolean stunned;
 
     public Enemy(String name, int health) {
         this.name = name;
         this.health = health;
+        this.stunned = false;
     }
 
-    void takeDamage(int damage) {
-        health -= damage;
+    public String getName() {
+        return name;
+    }
+    public int getHealth(){
+        return health;
     }
 
-    void stun() {
-        stunned = true;
+    public void takeDamage(int dmg) {
+        health -= dmg;
     }
 
-    boolean isStunned() {
+    public boolean isAlive() {
+        return health > 0;
+    }
+
+    public boolean isStunned() {
         return stunned;
     }
 
-    void clearStun() {
-        stunned = false;
+    public void stun() {
+        stunned = true;
     }
 
-    boolean isAlive() {
-        return health > 0;
+    public void clearStun() {
+        stunned = false;
     }
 }
