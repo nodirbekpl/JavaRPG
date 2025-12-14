@@ -41,7 +41,7 @@ public class Main {
                     System.out.println("You hit the enemy for " + dmg);
                     playerActed = true;
                 }
-                case "power" ->{
+                case "power" -> {
                     if (player.canUsePower()){
                         int dmg = random.nextInt(15) + 10;
                         enemy.takeDamage(dmg);
@@ -52,6 +52,17 @@ public class Main {
                     else {
                         System.out.println("Power attack is on cooldown!");
                     }
+                }
+                case "stun" ->{
+                    int roll = random.nextInt(100);
+                    if(!enemy.isStunned() && roll < 40){
+                        enemy.stun();
+                        System.out.println("Enemy is stunned!");
+                    }
+                    else {
+                        System.out.println("Stun failed.");
+                    }
+                    playerActed = true;
                 }
 
                 // Defencive / Utility
@@ -66,6 +77,7 @@ public class Main {
                     System.out.println("Player HP: " + player.health);
                     System.out.println("Enemy HP: " + enemy.health);
                     System.out.println("Power cooldown: " + player.powerCooldown);
+                    System.out.println("Enemy stunned: " + enemy.isStunned());
                 }
                 //Exit
                 case "quit" -> running = false;
@@ -81,17 +93,19 @@ public class Main {
             }
 
             if (playerActed && enemy.isAlive()) {
-                int roll = random.nextInt(100);
-                if (roll < 70) {
-                    int enemyDmg = random.nextInt(8) + 1 + (turn / 5);
-                    player.takeDamage(enemyDmg);
-                    System.out.println("Enemy hits you for " + enemyDmg);
+
+                if (enemy.isStunned()){
+                    System.out.println("Enemy is stunned");
+                    enemy.clearStun();
+                } else {
+                    int roll = random.nextInt(100);
+                    if (roll < 70) {
+                        int enemyDmg = random.nextInt(8) + 1 + (turn / 5);
+                        player.takeDamage(enemyDmg);
+                        System.out.println("Enemy hits you for " + enemyDmg);
+                    } else {
+                        System.out.println("Enemy hesitates...");
                     }
-
-
-
-                else {
-                    System.out.println("Enemy hesitates...");
                 }
                 if (turn % 5 == 0) {
                     System.out.println("The enemy grows more aggressive!");
