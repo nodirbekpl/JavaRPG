@@ -12,7 +12,7 @@ public class Main {
         Enemy enemy = new Enemy(50);
 
         System.out.println("=== TEXT RPG ===");
-        System.out.println("Commands: attack, heal, status, quit");
+        System.out.println("Command: help");
 
         boolean running = true;
         int turn = 1;
