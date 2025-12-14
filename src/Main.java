@@ -95,7 +95,6 @@ public class Main {
             if (playerActed && enemy.isAlive()) {
 
                 if (enemy.isStunned()){
-                    System.out.println("Enemy is stunned");
                     enemy.clearStun();
                 } else {
                     int roll = random.nextInt(100);
