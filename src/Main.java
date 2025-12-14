@@ -24,6 +24,16 @@ public class Main {
             boolean playerActed = false;
 
             switch (command) {
+                //InfoLine
+                case "help"->{
+                    System.out.println("Commands:");
+                    System.out.println("- attack    : basic attacks");
+                    System.out.println("- power     : strong attack (cooldown)");
+                    System.out.println("- stun      : chance to stun enemy");
+                    System.out.println("- heal      : restore some health");
+                    System.out.println("- status    : show status");
+                    System.out.println("- quit      : exit game");
+                }
                 // Offencive Actions
                 case "attack" -> {
                     int dmg = random.nextInt(10) + 1;
