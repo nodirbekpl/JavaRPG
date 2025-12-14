@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -7,9 +9,14 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
+        Enemy currentEnemy = null;
+
 
         Player player = new Player(100);
-        Enemy enemy = new Enemy(50);
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(new Enemy("Goblin", 30));
+        enemies.add(new Enemy("Orc", 50));
+        enemies.add(new Enemy("Skeleton", 40));
 
         System.out.println("=== TEXT RPG ===");
         System.out.println("Command: help");
@@ -22,6 +29,13 @@ public class Main {
             String command = scanner.nextLine().toLowerCase();
 
             boolean playerActed = false;
+            for (Enemy e : enemies) {
+                if (e.isAlive()) {
+                    currentEnemy = e;
+                    break;
+                }
+            }
+
 
             switch (command) {
                 //InfoLine
@@ -37,14 +51,17 @@ public class Main {
                 // Offencive Actions
                 case "attack" -> {
                     int dmg = random.nextInt(10) + 1;
-                    enemy.takeDamage(dmg);
-                    System.out.println("You hit the enemy for " + dmg);
+                    currentEnemy.takeDamage(dmg);
+
+                    System.out.println("You hit " + currentEnemy.name + " for " + dmg);
+
                     playerActed = true;
                 }
                 case "power" -> {
                     if (player.canUsePower()){
                         int dmg = random.nextInt(15) + 10;
-                        enemy.takeDamage(dmg);
+                        currentEnemy.takeDamage(dmg);
+
                         player.usePower();
                         System.out.println("POWER ATTACK for " + dmg);
                         playerActed = true;
@@ -55,8 +72,8 @@ public class Main {
                 }
                 case "stun" ->{
                     int roll = random.nextInt(100);
-                    if(!enemy.isStunned() && roll < 40){
-                        enemy.stun();
+                    if(!currentEnemy.isStunned() && roll < 40){
+                        currentEnemy.stun();
                         System.out.println("Enemy is stunned!");
                     }
                     else {
@@ -75,9 +92,9 @@ public class Main {
                 // Information
                 case "status" -> {
                     System.out.println("Player HP: " + player.health);
-                    System.out.println("Enemy HP: " + enemy.health);
+                    System.out.println("Enemy HP: " + currentEnemy.health);
                     System.out.println("Power cooldown: " + player.powerCooldown);
-                    System.out.println("Enemy stunned: " + enemy.isStunned());
+                    System.out.println("Enemy stunned: " + currentEnemy.isStunned());
                 }
                 //Exit
                 case "quit" -> running = false;
@@ -92,16 +109,15 @@ public class Main {
                 }
             }
 
-            if (playerActed && enemy.isAlive()) {
-
-                if (enemy.isStunned()){
-                    enemy.clearStun();
+            if (playerActed && currentEnemy != null && currentEnemy.isAlive()) {
+                if (currentEnemy.isStunned()){
+                    currentEnemy.clearStun();
                 } else {
                     int roll = random.nextInt(100);
                     if (roll < 70) {
                         int enemyDmg = random.nextInt(8) + 1 + (turn / 5);
                         player.takeDamage(enemyDmg);
-                        System.out.println("Enemy hits you for " + enemyDmg);
+                        System.out.println(currentEnemy.name + " hits you for " + enemyDmg);
                     } else {
                         System.out.println("Enemy hesitates...");
                     }
@@ -112,8 +128,15 @@ public class Main {
 
             }
 
-            if (!enemy.isAlive()) {
-                System.out.println("You defeated the enemy!");
+           boolean allDead = true;
+            for (Enemy e : enemies){
+                if (e.isAlive()){
+                    allDead = false;
+                    break;
+                }
+            }
+            if (allDead){
+                System.out.println("You defeated all enemies!");
                 running = false;
             }
 
