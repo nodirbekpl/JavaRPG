@@ -27,6 +27,8 @@ public class Main {
         while (running) {
             System.out.print("> ");
             String command = scanner.nextLine().toLowerCase();
+            String[] parts = command.split(" ");
+            String action = parts[0];
 
             boolean playerActed = false;
             for (Enemy e : enemies) {
@@ -37,7 +39,7 @@ public class Main {
             }
 
 
-            switch (command) {
+            switch (action) {
                 //InfoLine
                 case "help"->{
                     System.out.println("Commands:");
@@ -50,12 +52,43 @@ public class Main {
                 }
                 // Offencive Actions
                 case "attack" -> {
-                    int dmg = random.nextInt(10) + 1;
-                    currentEnemy.takeDamage(dmg);
+                    if (parts.length == 2){
+                        int targetIndex;
 
-                    System.out.println("You hit " + currentEnemy.getName() + " for " + dmg);
+                        try {
+                            targetIndex = Integer.parseInt(parts[1]);
+                        }catch (NumberFormatException e) {
+                            System.out.println("Invalid target number. ");
+                            break;
+                        }
+                        List<Enemy> aliveEnemies = new ArrayList<>();
+                        for (Enemy e : enemies){
+                            if (e.isAlive()){
+                                aliveEnemies.add(e);
+                            }
+                        }
+                        if (targetIndex < 1 || targetIndex > aliveEnemies.size()) {
+                            System.out.println("No such enemy. ");
+                            break;
+                        }
+                        Enemy selected = aliveEnemies.get(targetIndex - 1);
 
-                    playerActed = true;
+                        if ( selected != currentEnemy){
+                            currentEnemy = selected;
+                            System.out.println("You switch target to " + currentEnemy.getName());
+                        }
+                        int dmg = random.nextInt(10) + 1;
+                        currentEnemy.takeDamage(dmg);
+                        System.out.println("You attack " + currentEnemy.getName() + " for " + dmg);
+                        playerActed = true;
+                    } else {
+                        // fallback: attack current enemy
+                        int dmg = random.nextInt(10) + 1;
+                        currentEnemy.takeDamage(dmg);
+                        System.out.println("You attack " + currentEnemy.getName() + " for " + dmg);
+                        playerActed = true;
+                    }
+
                 }
                 case "power" -> {
                     if (player.canUsePower()){
@@ -91,10 +124,20 @@ public class Main {
                 }
                 // Information
                 case "status" -> {
+                    System.out.println("==== Status ====");
                     System.out.println("Player HP: " + player.health);
-                    System.out.println(currentEnemy.getName() + " HP: " + currentEnemy.getHealth());
                     System.out.println("Power cooldown: " + player.powerCooldown);
                     System.out.println("Enemy stunned: " + currentEnemy.isStunned());
+                    int index = 1;
+                    System.out.println("Enemies:");
+                    for (Enemy e : enemies) {
+                        if (e.isAlive()){
+                            String marker = (e == currentEnemy) ? " <== FIGHTING" : "";
+                            System.out.println(index + ". " + e.getName() + " ( HP: " + e.getHealth() + ")" + marker);
+                            index ++;
+                        }
+                    }
+                    System.out.println("============");
                 }
                 //Exit
                 case "quit" -> running = false;
