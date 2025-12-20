@@ -1,7 +1,7 @@
 public class Enemy {
     private String name;
     private int health;
-    private boolean stunned;
+    private boolean stunned = false;
 
     public Enemy(String name, int health) {
         this.name = name;
@@ -18,6 +18,7 @@ public class Enemy {
 
     public void takeDamage(int dmg) {
         health -= dmg;
+        if (health < 0) health = 0;
     }
 
     public boolean isAlive() {
@@ -34,5 +35,28 @@ public class Enemy {
 
     public void clearStun() {
         stunned = false;
+    }
+    private boolean stunImmune = false;
+
+    public boolean isStunImmune() {
+        return stunImmune;
+    }
+
+    public void giveStunImmunity() {
+        stunImmune = true;
+    }
+
+    public void clearStunImmunity() {
+        stunImmune = false;
+    }
+
+
+    public String getLoot() {
+        return switch (name.toLowerCase()){
+            case "goblin" -> "Small Potion";
+            case "orc" -> "Strength Potion";
+            case "skeleton" -> "Shield";
+            default -> null;
+        };
     }
 }
